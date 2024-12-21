@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import './TicTacToe.css'
 import Assest from '../Assets/circle.png';
  import Components from '../Assets/cross.png'
@@ -8,7 +8,8 @@ let data = ['','','','','','','','','']
 export const TicTacToe = () => {
 
     let [count, setCount] = useState(0);
-    let [lock, setLock] = useState(false)
+    let [lock, setLock] = useState(false);
+    let titleRef = useRef(null);
 
     const toggle = (e,num) => {
         if(lock){
@@ -24,49 +25,71 @@ export const TicTacToe = () => {
             data[num]='o';
             setCount(++count)
         }
+        checkWin();
     }
 
 
     const checkWin = () => {
         if(data[0]===data[1] && data[1]===data[2] && data[2]!=="")
         {
-            won(data);  
+            won(data[2]);  
         }
         else if(data[3]===data[4] && data[4]===data[5] && data[5]!=="")
         {
-            won(data);
+            won(data[5]);
         }
         else if(data[6]===data[7] && data[7]===data[8] && data[8]!=="")
             {
-                won(data);
+                won(data[8]);
             }
         else if(data[0]===data[3] && data[3]===data[6] && data[6]!=="")
             {
-                won(data);
+                won(data[6]);
             }
         else if(data[1]===data[4] && data[4]===data[7] && data[7]!=="")
             {
-                won(data);
+                won(data[7]);
             }
             else if(data[2]===data[5] && data[5]===data[8] && data[8]!=="")
                 {
-                    won(data);
+                    won(data[8]);
                 }
-                else if(data[0]===data[1] && data[1]===data[2] && data[2]!=="")
+                else if(data[0]===data[4] && data[4]===data[8] && data[8]!=="")
                     {
-                        won(data);
+                        won(data[8]);
                     }
+                    else if(data[0]===data[1] && data[1]===data[2] && data[2]!=="")
+                        {
+                            won(data[2]);
+                        }
+
+                        else if(data[2]===data[4] && data[4]===data[6] && data[6]!=="")
+                            {
+                                won(data[6]);
+                            }
         }
         
 
     const won = (winner) => {
         setLock(true);
+        if(winner==='x'){
+            titleRef.current.innerHTML=`Congratulation <img src=${Assest}>  Is Won`
+        }
+        else{
+             titleRef.current.innerHTML=`Congratulation <img src=${Components}> Is Won`
+        }
+    }
+
+    const reset = () => {
+        setLock(false);
+        data = ['','','','','','','','',''];
+        titleRef.current.innerHTML = 'Tic Tac Toe <span>React</span>'
     }
 
 
   return (
     <div className='container'>
-        <h1 className="title">Tic Tac Toe Game In <span> React</span></h1>
+        <h1 className="title" ref={titleRef}>Tic Tac Toe Game In <span> React</span></h1>
         <div className="board">
             <div className="row1">
                 <div className="boxes" onClick={(e)=>{toggle(e,0)}}></div>
@@ -84,7 +107,7 @@ export const TicTacToe = () => {
                 <div className="boxes" onClick={(e)=>{toggle(e,8)}}></div>
             </div>
         </div>
-        <button className="reset">
+        <button className="reset " onClick={() =>{reset( )}}>
             React
         </button>
     </div>
